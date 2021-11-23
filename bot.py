@@ -10,7 +10,7 @@ from telegram import *
 from io \
     import BytesIO
 
-bot = Updater("2103014393:AAGzPHpqhGhksJpP02w6X5omhrUhhzcw4L4", use_context=True)  # @AdvNetSecbot
+bot = Updater("TOKEN", use_context=True)  # @AdvNetSecbot
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
