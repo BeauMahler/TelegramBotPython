@@ -1,47 +1,74 @@
 import os
-import io
-import PIL.Image as Image
+import struct
+import shutil
+
+jpg_eof = b'\xff\xd9'
+png_eof = b'\x00IEND\xaeB`\x82'
 
 
-def read_image(path):
+def extract_secret(path):
     with open(path, "rb") as f:
-        return bytearray(f.read())
+        s = f.read()
+        read = bytearray(s)
+        secret = s.split(png_eof)[1]
+        print("secret extracted")
+        return secret
+
+
+def prepare_image(sourcefile, directory):
+    res = shutil.copy2(sourcefile, directory + "\\original.png")
+    print("copied image from {} to {}".format(sourcefile, res))
+
+
+def reset_image(file):
+    if os.path.exists(file):
+        os.remove(file)
+        print("removed file " + file)
+    else:
+        print("The file does not exist")
+
+
+def reconstruct_input(unpacked):
+    to_list = list(unpacked)
+    reconstructed = []
+    for i in range(0, len(to_list), 2):
+        reconstructed.append((to_list[i], to_list[i + 1]))
+    return reconstructed
 
 
 def main():
     cwd = os.getcwd()
+    input_list = [(1, 2), (3, 4), (4000, 4)]  # this will be given later
+    to_pack = []
 
-    input_list = [(1, 2), (3, 4), (12, 4)]
-
-    byte_list = []
-
-    # convert input_list
+    # pack input list
     for el in input_list:
-        temp = str(el[0]).encode() + str(el[1]).encode()
-        byte_list.insert(len(byte_list), temp)
+        to_pack.append(el[0])
+        to_pack.append(el[1])
 
-    secret = b''.join(byte_list)
+    secret = struct.pack('{}h'.format(len(to_pack)), *to_pack)
+    print("secret to inject: {}".format(secret))
 
-    print(secret)
+    # preparation for injection
+    prepare_image(cwd + '\\input\\original.png', cwd)
 
-    # bytes_image = read_image(cwd + '\\resources\\original.jpg')
-    # print(bytes_image[-20:])
-
-    f = open(cwd + '\\original.jpg', 'a')
-
-    f.write('\\d9\\d2\\d9')
-
+    # write secret at the end of the file
+    f = open(cwd + '\\original.png', 'ab')
+    f.write(secret)
+    print("secret injected")
     f.close()
 
-    # bytes_image.extend(secret)
+    # extraction from image
+    extracted = extract_secret(cwd + '\\original.png')
+    unpacked = struct.unpack('{}h'.format(len(to_pack)), extracted)
+    print("extracted secret: {}".format(extracted))
+    print("unpacked secret: {}".format(unpacked))
 
-    bytes_image2 = read_image(cwd + '\\original.jpg')
+    # reconstruct original list
+    print("reconstructed list: {}".format(reconstruct_input(unpacked)))
 
-    # print(bytes_image2[-20:])
-
-    # image = Image.open(io.BytesIO(bytes_image2))
-
-    # image.save("original.jpg")
+    # cleanup for next run
+    reset_image(cwd + '\\original.png')
 
 
 if __name__ == '__main__':
