@@ -1,17 +1,17 @@
-from classes.MessageEncoder import MessageEncoder
-from classes.MessageDecoder import MessageDecoder
+from Encoders.MessageEncoder import MessageEncoder
+from Decoders.MessageDecoder import MessageDecoder
 
 
 def test():
     message = "does it work again today"
 
-    a = MessageEncoder("resources/original.jpg")
-    a.encode_message(message)
+    a = MessageEncoder("resources/original.png")
+    key = a.encode_message(message)
 
-    key = a.write_img("resources/test.png")  # not sure what this is for
-    print(key)
+    a.write_img("resources/encoded.png")  # not sure what this is for
 
-    b = MessageDecoder("resources/test.png")
+    b = MessageDecoder("resources/encoded.png")
+
     decoded = b.decode_msg(key)
 
     trimmed = decoded.rstrip("\x00")

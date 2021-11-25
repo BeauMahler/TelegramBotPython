@@ -1,7 +1,7 @@
 import os
 import shutil
-from classes.KeyEncoder import KeyEncoder
-from classes.KeyDecoder import KeyDecoder
+from Encoders.KeyEncoder import KeyEncoder
+from Decoders.KeyDecoder import KeyDecoder
 
 jpg_eof = b'\xff\xd9'
 png_eof = b'\x00IEND\xaeB`\x82'
