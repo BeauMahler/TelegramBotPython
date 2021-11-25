@@ -4,19 +4,20 @@ import shutil
 
 jpg_eof = b'\xff\xd9'
 png_eof = b'\x00IEND\xaeB`\x82'
+jpg_ex = ".jpg"
+png_ex = ".png"
 
 
 def extract_secret(path):
     with open(path, "rb") as f:
         s = f.read()
-        read = bytearray(s)
         secret = s.split(png_eof)[1]
         print("secret extracted")
         return secret
 
 
 def prepare_image(sourcefile, directory):
-    res = shutil.copy2(sourcefile, directory + "\\original.png")
+    res = shutil.copy2(sourcefile, directory + "\\original" + png_ex)
     print("copied image from {} to {}".format(sourcefile, res))
 
 
@@ -50,16 +51,16 @@ def main():
     print("secret to inject: {}".format(secret))
 
     # preparation for injection
-    prepare_image(cwd + '\\input\\original.png', cwd)
+    prepare_image(cwd + '\\input\\original' + png_ex, cwd)
 
     # write secret at the end of the file
-    f = open(cwd + '\\original.png', 'ab')
+    f = open(cwd + '\\original' + png_ex, 'ab')
     f.write(secret)
     print("secret injected")
     f.close()
 
     # extraction from image
-    extracted = extract_secret(cwd + '\\original.png')
+    extracted = extract_secret(cwd + '\\original' + png_ex)
     unpacked = struct.unpack('{}h'.format(len(to_pack)), extracted)
     print("extracted secret: {}".format(extracted))
     print("unpacked secret: {}".format(unpacked))
@@ -68,7 +69,7 @@ def main():
     print("reconstructed list: {}".format(reconstruct_input(unpacked)))
 
     # cleanup for next run
-    reset_image(cwd + '\\original.png')
+    reset_image(cwd + '\\original' + png_ex)
 
 
 if __name__ == '__main__':
