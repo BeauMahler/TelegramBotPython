@@ -6,7 +6,8 @@ class Encoder(object):
 
 
     def __init__(self, img_name):
-        self.key = set()
+        self.key = []
+        self.key_set= set()
         self.img = Image.open(img_name)
 
 
@@ -15,7 +16,7 @@ class Encoder(object):
         for i in tqdm(range(0,len(raw_msg),3), "encoding"):
             index = self._get_index()
             self.img.putpixel(index,(raw_msg[i],raw_msg[i+1],raw_msg[i+2]))
-        return list(self.key)
+        return self.key
 
     def write_img(self,file_name):
         self.img.save(file_name, "PNG")
@@ -29,10 +30,11 @@ class Encoder(object):
         width, height = self.img.size
         x = np.random.randint(0,width)
         y = np.random.randint(0,height)
-        if (x,y) in self.key:
+        if (x,y) in self.key_set:
             return self._get_index()
         else:
-            self.key.add((x,y))
+            self.key.append((x,y))
+            self.key_set.add((x,y))
             return (x,y)
 
 
@@ -53,7 +55,7 @@ class Decoder(object):
 
 def example():
     a = Encoder("resources/original.jpg")
-    a.encode_message("Q"*1000000)
+    a.encode_message("does it work again today")
 
     key = a.write_img("resources/test.png")
 
