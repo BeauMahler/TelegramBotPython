@@ -1,6 +1,3 @@
-
-
-
 from PIL import Image, ImageFilter
 import numpy as np
 from tqdm import tqdm
@@ -18,10 +15,11 @@ class Encoder(object):
         for i in tqdm(range(0,len(raw_msg),3), "encoding"):
             index = self._get_index()
             self.img.putpixel(index,(raw_msg[i],raw_msg[i+1],raw_msg[i+2]))
+        return self.key
 
     def write_img(self,file_name):
         self.img.save(file_name, "PNG")
-        print(self.key)
+        return self.key
 
     def _pad_msg(self,msg:bytes):
         pad_len = 3 - len(msg) % 3
@@ -51,3 +49,17 @@ class Decoder(object):
             msg += chr(r)+chr(g)+chr(b)
 
         return msg
+
+
+def example():
+    a = Encoder("resources/original.jpg")
+    a.encode_message("cat /etc/passwd")
+
+    key = a.write_img("resources/test.png")
+
+    b = Decoder("resources/test.png")
+    print(b.decode_msg(key))
+
+example()
+
+
