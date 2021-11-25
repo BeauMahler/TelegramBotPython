@@ -51,7 +51,7 @@ def main():
     print("secret to inject: {}".format(secret))
 
     # preparation for injection
-    prepare_image(cwd + '\\input\\original' + png_ex, cwd)
+    prepare_image(cwd + '\\resources\\original' + png_ex, cwd)
 
     # write secret at the end of the file
     f = open(cwd + '\\original' + png_ex, 'ab')
@@ -61,7 +61,9 @@ def main():
 
     # extraction from image
     extracted = extract_secret(cwd + '\\original' + png_ex)
-    unpacked = struct.unpack('{}h'.format(len(to_pack)), extracted)
+    print(len(extracted))
+    print(len(to_pack))
+    unpacked = struct.unpack('{}h'.format(len(extracted)//2), extracted)
     print("extracted secret: {}".format(extracted))
     print("unpacked secret: {}".format(unpacked))
 
