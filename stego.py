@@ -6,7 +6,7 @@ class Encoder(object):
 
 
     def __init__(self, img_name):
-        self.key = []
+        self.key = set()
         self.img = Image.open(img_name)
 
 
@@ -15,7 +15,7 @@ class Encoder(object):
         for i in tqdm(range(0,len(raw_msg),3), "encoding"):
             index = self._get_index()
             self.img.putpixel(index,(raw_msg[i],raw_msg[i+1],raw_msg[i+2]))
-        return self.key
+        return list(self.key)
 
     def write_img(self,file_name):
         self.img.save(file_name, "PNG")
@@ -32,7 +32,7 @@ class Encoder(object):
         if (x,y) in self.key:
             return self._get_index()
         else:
-            self.key.append((x,y))
+            self.key.add((x,y))
             return (x,y)
 
 
@@ -53,7 +53,7 @@ class Decoder(object):
 
 def example():
     a = Encoder("resources/original.jpg")
-    a.encode_message("cat /etc/passwd")
+    a.encode_message("Q"*1000000)
 
     key = a.write_img("resources/test.png")
 
