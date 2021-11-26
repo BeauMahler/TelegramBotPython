@@ -34,5 +34,9 @@ class MessageEncoder(object):
         raw_msg = self.__pad_msg(msg.encode())
         for i in tqdm(range(0, len(raw_msg), 3), "encoding"):
             index = self.__get_index()
-            self.__img.putpixel(index, (raw_msg[i], raw_msg[i + 1], raw_msg[i + 2]))
+            if self.__img.format == "PNG":
+                alpha = self.__img.getpixel(index)[3]
+                self.__img.putpixel(index,(raw_msg[i],raw_msg[i+1],raw_msg[i+2], alpha))
+            else:
+                self.__img.putpixel(index,(raw_msg[i],raw_msg[i+1],raw_msg[i+2], 255))
         return self.__key
