@@ -1,7 +1,7 @@
-from classes.Sender import Sender
-from classes.Receiver import Receiver
 import os
 import shutil
+from classes.Sender import Sender
+from classes.Receiver import Receiver
 
 jpg_ex = ".jpg"
 png_ex = ".png"

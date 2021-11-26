@@ -2,15 +2,12 @@
 
 import logging
 
-from telegram.ext \
-    import Updater, MessageHandler, Filters
-
+from telegram.ext import Updater, MessageHandler, Filters
 
 from telegram import *
-from io \
-    import BytesIO
+from io import BytesIO
 
-bot = Updater("TOKEN", use_context=True)  # @AdvNetSecbot
+bot = Updater("2103014393:AAGzPHpqhGhksJpP02w6X5omhrUhhzcw4L4", use_context=True)  # @AdvNetSecbot
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -30,6 +27,7 @@ def error(update, context):
 
 # CODE FOR DECRYPTING PHOTO MESSAGE
 def decrypt(update, context):
+    print("i am here")
     # update.message.reply_text('decrypt photo')
     file = bot.getFile(update.message.photo[-1].file_id)
     print("file_id: " + str(update.message.photo[-1].file_id))
@@ -55,6 +53,7 @@ def main():
     bot.idle()
 
     bot.stop()
+
 
 if __name__ == '__main__':
     main()
