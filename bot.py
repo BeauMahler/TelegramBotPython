@@ -1,13 +1,14 @@
 # install python-telegram-bot package
-
+import os
 import logging
 
+from classes.Receiver import Receiver
 from telegram.ext import Updater, MessageHandler, Filters
 
 from telegram import *
 from io import BytesIO
 
-bot = Updater("2103014393:AAGzPHpqhGhksJpP02w6X5omhrUhhzcw4L4", use_context=True)  # @AdvNetSecbot
+bot = Updater("2136505229:AAFQ9WIDMqSJlxZbOfAVssKrIDcwcRKMxh8", use_context=True)  # @AdvNetSecbot
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -27,13 +28,14 @@ def error(update, context):
 
 # CODE FOR DECRYPTING PHOTO MESSAGE
 def decrypt(update, context):
-    print("i am here")
-    # update.message.reply_text('decrypt photo')
-    file = bot.getFile(update.message.photo[-1].file_id)
-    print("file_id: " + str(update.message.photo[-1].file_id))
+    message = "this is the secret message"
 
-    # f = BytesIO(file.download_as_bytearray())
-    # context.bot.send_message(chat_id=update.message.chat_id, text='Joe')
+    receiver = Receiver(os.getcwd() + '/' + context.bot.get_file(update.message.document).download())
+    received = receiver.retrieve_message()
+    print(received)
+    update.message.reply_text(received)
+
+    assert True, message == received
 
 
 def main():
@@ -41,7 +43,7 @@ def main():
     dp = bot.dispatcher
 
     # on received text or photo message
-    dp.add_handler(MessageHandler(Filters.photo, decrypt))
+    dp.add_handler(MessageHandler(Filters.document, decrypt))
     dp.add_handler(MessageHandler(Filters.text, echo))
 
     # log all errors
