@@ -1,7 +1,8 @@
 # install python-telegram-bot package
-
+import os
 import logging
 
+from classes.Receiver import Receiver
 from telegram.ext import Updater, MessageHandler, Filters
 
 from telegram import *
@@ -27,13 +28,12 @@ def error(update, context):
 
 # CODE FOR DECRYPTING PHOTO MESSAGE
 def decrypt(update, context):
-    print("i am here")
-    # update.message.reply_text('decrypt photo')
-    file = bot.getFile(update.message.photo[-1].file_id)
-    print("file_id: " + str(update.message.photo[-1].file_id))
+    message = "this is the secret message"
 
-    # f = BytesIO(file.download_as_bytearray())
-    # context.bot.send_message(chat_id=update.message.chat_id, text='Joe')
+    receiver = Receiver(os.getcwd() + '\\' + context.bot.get_file(update.message.document).download())
+    received = receiver.retrieve_message()
+
+    assert True, message == received
 
 
 def main():
@@ -41,7 +41,7 @@ def main():
     dp = bot.dispatcher
 
     # on received text or photo message
-    dp.add_handler(MessageHandler(Filters.photo, decrypt))
+    dp.add_handler(MessageHandler(Filters.document, decrypt))
     dp.add_handler(MessageHandler(Filters.text, echo))
 
     # log all errors
