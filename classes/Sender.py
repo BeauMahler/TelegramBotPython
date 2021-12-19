@@ -12,9 +12,9 @@ class Sender(object):
         self.__message_encoder = MessageEncoder(img_name)
         self.__save_dir = save_dir
 
-    def encode_message_in_image(self):
+    def encode_message_in_image(self, fname = "encoded.png"):
         self.__message_encoder.encode_message(self.__message)
-        key = self.__message_encoder.write_img(self.__save_dir + "/encoded.png")
-        key_encoder = KeyEncoder("encoded.png", key)
+        key = self.__message_encoder.write_img(self.__save_dir + "/"+fname)
+        key_encoder = KeyEncoder(fname, key)
         key_encoder.encode_key()
         self.__img.close()

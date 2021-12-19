@@ -26,7 +26,7 @@ def demo():
     cwd = os.getcwd()
 
     fname = input("Please specify the image you want to use for encoding: ")
-    message = ''.join(random.choices(string.ascii_uppercase+string.ascii_lowercase, k=100000))
+    message = ''.join(random.choices(string.ascii_uppercase+string.ascii_lowercase, k=500000))
 
 
     #prepare_image("resources/original.png", "original.png")
